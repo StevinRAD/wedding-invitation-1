@@ -310,10 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Membuat link WA agar bisa mengarah langsung ke aplikasi WA beserta isi teksnya
             const urlWhatsApp = `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(formatPesan)}`;
 
-            // Membuka tab WhatsApp (Atau applikasi wa langsung jika di HP)
-            setTimeout(() => {
-                window.open(urlWhatsApp, '_blank');
-            }, 500); // delay sejenak 0.5 detik
+            // Membuka tab WhatsApp (Atau aplikasi WA langsung jika di HP)
+            // (PENTING: Tidak boleh pakai setTimeout agar tidak dianggap "popup ilegal" dan diblokir peramban HP)
+            window.open(urlWhatsApp, '_blank');
         });
     }
 
