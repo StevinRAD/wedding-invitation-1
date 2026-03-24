@@ -118,11 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function createPetalShapes() {
         // Create different petal shapes using small canvases
         const colors = [
-            'rgba(212, 175, 55, 0.6)',     // Gold
-            'rgba(105, 122, 106, 0.5)',     // Sage green
-            'rgba(220, 180, 180, 0.65)',    // Pink blush
-            'rgba(180, 160, 120, 0.5)',     // Tan
-            'rgba(160, 200, 160, 0.45)',    // Light green
+            'rgba(212, 163, 115, 0.6)',     // Coksu
+            'rgba(224, 170, 130, 0.5)',     // Light peach
+            'rgba(230, 204, 178, 0.65)',    // Creamy
+            'rgba(250, 237, 205, 0.5)',     // Very light brown
+            'rgba(192, 133, 82, 0.45)',     // Darker peach
         ];
 
         colors.forEach(color => {
@@ -412,7 +412,7 @@ window.copyFromModal = function() {
         // Show success state
         btn.innerHTML = '<i class="fas fa-check me-2"></i> Berhasil Disalin!';
         btn.style.background = 'var(--color-primary-dark)';
-        btn.style.color = '#151715';
+        btn.style.color = '#ffffff';
         
         // Revert back after 2 seconds
         setTimeout(() => {
