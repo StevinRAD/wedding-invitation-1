@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!name || !message) return;
 
-            // Store locally
+            // Menyimpan ke penyimpanan browser lokal agar ucapan tetap tampil di web
             const localWishes = JSON.parse(localStorage.getItem('wedding-wishes') || '[]');
             localWishes.push({ name, message });
             localStorage.setItem('wedding-wishes', JSON.stringify(localWishes));
@@ -293,11 +293,27 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset form
             wishForm.reset();
 
-            // Re-render
+            // Render ulang daftar ucapan
             renderWishes();
 
-            // Show toast
-            showToast('Terima kasih atas doa dan ucapannya! 🙏');
+            // Tampilkan pop up kecil memberi tahu proses pengalihan ke WhatsApp
+            showToast('Mengalihkan ke WhatsApp otomatis...');
+
+            // ===== KONFIGURASI PENGIRIMAN KE WHATSAPP =====
+            // Ganti 6281234567890 dengan nomor WhatsApp asli (contoh: 6285812345678)
+            // Pastikan menggunakan format negara "62" tanpa simbol "+" atau angka "0" di awal.
+            const nomorWhatsApp = "6281234567890"; 
+
+            // Menyusun format template pesan dari data form tamu:
+            const formatPesan = `Halo Budi & Sari! 👋\n\nSaya *${name}* ingin menyampaikan doa dan ucapan untuk pernikahan kalian:\n\n_"${message}"_`;
+
+            // Membuat link WA agar bisa mengarah langsung ke aplikasi WA beserta isi teksnya
+            const urlWhatsApp = `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(formatPesan)}`;
+
+            // Membuka tab WhatsApp (Atau applikasi wa langsung jika di HP)
+            setTimeout(() => {
+                window.open(urlWhatsApp, '_blank');
+            }, 500); // delay sejenak 0.5 detik
         });
     }
 
@@ -406,3 +422,45 @@ window.copyFromModal = function() {
         console.error('Failed to copy!', err);
     });
 };
+
+// === ADD TO CALENDAR / SAVE TO DATE (GLOBAL) ===
+window.downloadICS = function(e) {
+    if (e) e.preventDefault();
+    
+    // Deteksi apakah pengguna menggunakan Apple Device (iOS / Mac)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isMacOs = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+    if (isIOS || isMacOs) {
+        // Di perangkat Apple, file .ics langsung memunculkan pop-up "Add to Calendar" bawaan tanpa terlihat seperti download file biasa.
+        const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//UndanganPernikahan//BudiSari//ID
+BEGIN:VEVENT
+UID:wedding-budi-sari-20261024
+DTSTAMP:20261024T000000Z
+DTSTART:20261024T010000Z
+DTEND:20261024T070000Z
+SUMMARY:Pernikahan Budi & Sari
+DESCRIPTION:Pernikahan Budi Santoso & Sari Wijaya\\n\\nTanpa mengurangi rasa hormat, kami mengharapkan kehadiran Bapak/Ibu/Saudara/i untuk memberikan doa restu.\\n\\nTerima kasih.
+LOCATION:Gedung Serbaguna Bali, Jl. Raya Puputan No. 123, Denpasar, Bali
+END:VEVENT
+END:VCALENDAR`;
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Undangan_Budi_Sari.ics';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    } else {
+        // Untuk Android dan Laptop Windows (menghindari download file .ics)
+        // Kita langsung arahkan ke aplikasi Google Calendar yang sudah pasti ada di HP Android
+        const googleCalendarUrl = "https://www.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Budi+%26+Sari&dates=20261024T010000Z/20261024T070000Z&details=Pernikahan+Budi+Santoso+%26+Sari+Wijaya%0A%0ATanpa+mengurangi+rasa+hormat,+kami+mengharapkan+kehadiran+Bapak/Ibu/Saudara/i.&location=Gedung+Serbaguna+Bali,+Jl.+Raya+Puputan+No.+123,+Denpasar,+Bali";
+        window.open(googleCalendarUrl, '_blank');
+    }
+};
+
