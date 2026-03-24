@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const coverSection = document.getElementById('cover-section');
     const mainContent = document.getElementById('main-content');
     const btnOpen = document.getElementById('btn-open');
-    const btnMusic = document.getElementById('btn-music');
 
     btnOpen.addEventListener('click', () => {
         // Animate cover out
@@ -45,8 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Start falling petals
             startFallingPetals();
 
-            // Show music button
-            btnMusic.classList.add('visible');
+
 
             // Start background music (auto on user interaction)
             playMusic();
@@ -219,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === MUSIC CONTROL ===
     let bgMusic;
-    let isMusicPlaying = false;
 
     function playMusic() {
         if (!bgMusic) {
@@ -228,34 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
             bgMusic.volume = 0.3;
         }
 
-        bgMusic.play().then(() => {
-            isMusicPlaying = true;
-            btnMusic.classList.remove('paused');
-        }).catch(() => {
-            // Autoplay blocked, user needs to interact
-            isMusicPlaying = false;
-            btnMusic.classList.add('paused');
-        });
-    }
-
-    if (btnMusic) {
-        btnMusic.addEventListener('click', () => {
-            if (!bgMusic) {
-                bgMusic = new Audio('https://www.dropbox.com/scl/fi/56nuys1esb53lgmc9x1ac/Canon-in-D-Pachelbel-Violin-Cello_Piano-SjYecEQFL0U.mp3?rlkey=4863hj6py7ynzikmsv8jdt7v2&st=ne3yg0mw&raw=1');
-                bgMusic.loop = true;
-                bgMusic.volume = 0.3;
-            }
-
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                isMusicPlaying = false;
-                btnMusic.classList.add('paused');
-            } else {
-                bgMusic.play();
-                isMusicPlaying = true;
-                btnMusic.classList.remove('paused');
-            }
-        });
+        // Play the music (started by the user click on 'Buka Undangan')
+        bgMusic.play().catch(console.error);
     }
 
 
