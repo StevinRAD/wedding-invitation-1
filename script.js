@@ -7,6 +7,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // === GUEST NAME DARI URL ===
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestNameParam = urlParams.get('to');
+    
+    if (guestNameParam) {
+        const guestNameElement = document.getElementById('guest-name');
+        if (guestNameElement) {
+            guestNameElement.textContent = guestNameParam;
+        }
+    }
+
     // === LOADER ===
     const loader = document.querySelector('.loader-wrapper');
     window.addEventListener('load', () => {
